@@ -56,55 +56,29 @@ If you find this code useful in a publication, please use the following citation
 ```
 
 ## Setup 
-Tested on Ubuntu 22.04 and Windows 11 with PyTorch 2.7.0, and CUDA 11.8 and 12.8.
-<br>
+Tested on Gentoo with CUDA 13.2 ~~Ubuntu 22.04 and Windows 11 with PyTorch 2.7.0, and CUDA 11.8 and 12.8.~~
+<br><br> Note I am not using conda for environment management<br><br>
 Create the environment:
 ```bash
 git clone --recursive https://github.com/graphdeco-inria/on-the-fly-nvs.git
 cd on-the-fly-nvs
-conda create -n onthefly_nvs python=3.12 -y
-conda activate onthefly_nvs
+~~conda create -n onthefly_nvs python=3.12 -y~~
+~~conda activate onthefly_nvs~~
+python -m venv onthefly_nvs
+source onthefly_nvs/bin/activate
 ```
-Default setup with CUDA 12.8 (check your compute platform with `nvcc --version`):
-```pwsh
-# Windows Only
-SET DISTUTILS_USE_SDK=1 # (If you use cmd.exe)
-$env:DISTUTILS_USE_SDK=1 # (If you use PowerShell)
-```
+Default setup with CUDA 13.2 ~~CUDA 12.8~~ (check your compute platform with `nvcc --version`):
+
 ```bash
 # Get the versions corresponding to your compute platform at https://pytorch.org/
-pip install torch torchvision xformers --index-url https://download.pytorch.org/whl/cu128
-pip install cupy-cuda12x
-pip install -r requirements.txt
+pip install torch torchvision xformers --index-url https://download.pytorch.org/whl/cu130
+pip install cupy-cuda13x
+pip install hatchling
+pip install --no-build-isolation -r requirements.txt
 ```
 
-<details>
-<summary>Setup with CUDA 11.8</summary>
-Note that <code>xformers</code> will not be installed with CUDA 11.8 because it requires a version of PyTorch that is incompatible with our codebase.
-<pre><code>pip install torch torchvision --index-url https://download.pytorch.org/whl/cu118
-pip install cupy-cuda11x
-pip install -r requirements.txt
-</code></pre>
-</details>
 
-<details>
-<summary>Installing CUDA within a Conda Environment</summary>
-If <code>nvcc --version</code> returns an error, you can install CUDA within your Conda environment. 
-After activating your environment and before installing PyTorch, run:
-<pre><code>conda install nvidia/label/cuda-12.8.0::cuda-nvcc
-</code></pre>
-Make sure to replace <code>12.8.0</code> with a version supported by your driver (check maximum version with <code>nvidia-smi</code>). A list of the available versions can be found <a href="https://anaconda.org/nvidia/cuda-nvcc">here</a>.
-</details>
 
-<details>
-<summary>Specifying Environment Path</summary>
-You can specify paths for Conda to save space on your system drive:
-<pre><code>conda config --add pkgs_dirs &lt;pkg_path&gt;
-conda create python=3.12 -y --prefix &lt;env_path&gt;/onthefly_nvs
-conda activate &lt;env_path&gt;/onthefly_nvs
-</code></pre>
-Where <code>&lt;pkg_path&gt;</code> is the desired package download location and <code>&lt;env_path&gt;/onthefly_nvs</code> is the desired environment location.
-</details>
 
 ## Data Guidelines
 > Please note that our method **is not a drop-in replacement for COLMAP + 3DGS, as it does not reorder images**. We require sequential capture that implies several constraints on the kind of data that can be handled. Please follow the **[Capture Guidelines](#capture-guidelines) for best results on your own data.**
